@@ -15,7 +15,6 @@ export default defineConfig({
     VitePWA({
       registerType: 'prompt',
       injectRegister: false,
-      pwaAssets: { image: 'public/logo.svg', preset: 'minimal-2023', overrideManifestIcons: true },
       manifest: {
         name: 'Kashiru',
         short_name: 'Kashiru',
@@ -25,6 +24,12 @@ export default defineConfig({
         start_url: '/',
         theme_color: '#f3f2ef',
         background_color: '#f3f2ef',
+        // Ikon dari paket favicon Kashiru (public/). Kotak navy penuh, huruf di zona aman, jadi bisa maskable.
+        icons: [
+          { src: '/android-chrome-192x192.png', sizes: '192x192', type: 'image/png', purpose: 'any' },
+          { src: '/android-chrome-512x512.png', sizes: '512x512', type: 'image/png', purpose: 'any' },
+          { src: '/android-chrome-512x512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
+        ],
       },
       workbox: {
         navigateFallback: '/index.html',
