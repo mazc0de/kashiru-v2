@@ -1,0 +1,123 @@
+@import "@fontsource/courier-prime/400.css";
+@import "@fontsource/courier-prime/700.css";
+
+/*
+ * Landing page: satu struk thermal panjang. Warna dasar dan tinta mengikuti token aplikasi; kertas struk
+ * tetap terang di mode gelap karena kertas thermal memang putih.
+ */
+.landing {
+  --paper: #fdfdfc;
+  --paper-ink: #141414;
+  --paper-muted: #5f5e5a;
+  --paper-rule: #8a8985;
+  --paper-mark: #fde3d1;
+  --printer: #262624;
+  --printer-edge: #0c0c0b;
+  --led: #c2410c;
+}
+
+@media (prefers-color-scheme: dark) {
+  .landing {
+    --paper: #f4f3ef;
+    --paper-mark: #fbd7bf;
+    --printer: #2e2e2c;
+    --printer-edge: #050505;
+    --led: #f2884b;
+  }
+}
+
+.landing ::selection {
+  background: var(--brand);
+  color: var(--background);
+}
+
+.receipt-type {
+  font-family: "Courier Prime", "Courier New", Courier, monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Garis putus-putus seperti hasil printer thermal. */
+.receipt-rule {
+  height: 0;
+  border-top: 1.5px dashed var(--paper-rule);
+}
+
+/* Bayangan mengikuti bentuk kertas, termasuk tepi sobekan. */
+.receipt-shadow {
+  filter: drop-shadow(0 14px 18px rgb(20 20 20 / 0.16)) drop-shadow(0 2px 2px rgb(20 20 20 / 0.08));
+}
+
+@media (prefers-color-scheme: dark) {
+  .receipt-shadow {
+    filter: drop-shadow(0 14px 24px rgb(0 0 0 / 0.55));
+  }
+}
+
+/* Tepi sobekan bergerigi di ujung struk. */
+.receipt-tear {
+  --tooth: 9px;
+  height: 28px;
+  background: var(--paper);
+  mask: conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) 50% / calc(2 * var(--tooth)) 100%;
+}
+
+/* Kertas hanya terlihat di bawah mulut printer. */
+.receipt-feed {
+  clip-path: inset(0 -64px -100vh -64px);
+}
+
+/* Baris yang sedang dibahas catatan pinggir: stabilo oranye di atas kertas. */
+.receipt-section {
+  transition: background-color 240ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.receipt-section[data-active="true"] {
+  background-color: var(--paper-mark);
+}
+
+.margin-note {
+  transition: color 240ms cubic-bezier(0.16, 1, 0.3, 1), opacity 240ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /*
+   * Sekali saat halaman dibuka: struk tercetak dari kepala sampai sobekan, memanjang ke bawah dengan kecepatan
+   * printer yang rata. Catatan pinggir ikut terbuka tepat saat barisnya tercetak. Lampu berkedip selama mencetak.
+   */
+  .receipt-print {
+    animation: receipt-print 4200ms cubic-bezier(0.3, 0.05, 0.4, 1) 300ms backwards;
+  }
+  .printer-led {
+    animation: printer-led 300ms steps(2, jump-none) 300ms 14;
+  }
+}
+
+@keyframes receipt-print {
+  from {
+    clip-path: inset(0 -64px 100% -64px);
+  }
+  to {
+    clip-path: inset(0 -64px 0 -64px);
+  }
+}
+
+@keyframes printer-led {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0.25;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* Struk demo Kasir keluar dari printer setiap kali Bayar ditekan. */
+  .demo-print {
+    animation: demo-print 1100ms cubic-bezier(0.16, 1, 0.3, 1) backwards;
+  }
+}
+
+@keyframes demo-print {
+  from {
+    transform: translateY(-100%);
+  }
+}
