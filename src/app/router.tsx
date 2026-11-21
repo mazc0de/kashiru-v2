@@ -3,13 +3,15 @@ import { Navigate, createBrowserRouter } from 'react-router'
 import { AppShell } from '@/app/AppShell'
 import { PhasePlaceholder, NotFound } from '@/app/PhasePlaceholder'
 import { LaptopOnly } from '@/app/LaptopOnly'
-import { HomeRedirect } from '@/app/HomeRedirect'
+import { Home } from '@/app/Home'
 import { SKELETON_SCREENS } from '@/app/navigation'
 import { RequireLogin } from '@/auth/RequireLogin'
 
 // Layar selain kasir dimuat terpisah supaya bundel awal kecil. Service worker tetap
 // menyimpan semua bagiannya, jadi aplikasi tetap terbuka saat offline.
 export const router = createBrowserRouter([
+  // Landing page untuk pengunjung yang belum login; akun yang login diarahkan ke Kasir/Dashboard.
+  { path: '/', element: <Home /> },
   { path: '/login', lazy: async () => ({ Component: (await import('@/auth/LoginPage')).LoginPage }) },
   {
     element: (
@@ -18,7 +20,6 @@ export const router = createBrowserRouter([
       </RequireLogin>
     ),
     children: [
-      { index: true, element: <HomeRedirect /> },
       {
         path: '/pos',
         lazy: async () => {
